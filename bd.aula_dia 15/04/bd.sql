@@ -25,6 +25,6 @@ CREATE TABLE cardapios(
     idCardapio SERIAL PRIMARY KEY NOT NULL,
     descricao VARCHAR(15) NOT NULL,
     idPizzaria INTEGER NOT NULL, --FK
-    FOREING KEY (idPizzaria) REFERENCES pizzarias(idPizzaria)
-)
+    FOREIGN KEY (idPizzaria) REFERENCES pizzarias(idPizzaria)
+);
 

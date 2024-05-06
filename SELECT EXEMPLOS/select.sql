@@ -20,3 +20,4 @@ SELECT c.idCliente, c.cliente,b.idBairro AS codBairros, b.bairro, b.tempoEspera
          bairros b,
     WHERE c.idBairro = b.idBairro; -- RI
     AND b.bairro = 'Barra'-- filtro
+

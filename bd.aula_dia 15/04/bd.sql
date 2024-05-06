@@ -19,8 +19,8 @@ CREATE TABLE pizzarias(
 
 
 
-CREATE TABLE bairros (
-    idBairro SERIAL  PRIMARY key not null,
+CREATE TABLE bairros(
+    idBairro SERIAL  PRIMARY KEY NOT NULL,
     bairro VARCHAR(30) NOT NULL
     cidade VARCHAR (30) NOT NULL
     tempoEspera TIME    
@@ -87,3 +87,4 @@ CREATE TABLE itens_pedidos(
                                             (idPizza)
 
 );
+

@@ -1,90 +1,138 @@
--- Inserindo registros na tabela professores
-INSERT INTO professores (nome, salario_mensal, salario_aula, data_hora) VALUES ('Ana Silva', 3000.00, 50.00, '2024-05-01 10:00:00');
-INSERT INTO professores (nome, salario_mensal, salario_aula, data_hora) VALUES ('Carlos Souza', 3200.00, 55.00, '2024-05-02 11:00:00');
-INSERT INTO professores (nome, salario_mensal, salario_aula, data_hora) VALUES ('Mariana Lima', 3100.00, 52.00, '2024-05-03 12:00:00');
-INSERT INTO professores (nome, salario_mensal, salario_aula, data_hora) VALUES ('João Pedro', 3300.00, 53.00, '2024-05-04 13:00:00');
-INSERT INTO professores (nome, salario_mensal, salario_aula, data_hora) VALUES ('Renata Costa', 3400.00, 54.00, '2024-05-05 14:00:00');
+CREATE TABLE PRODUTO (
+    produto_id INTEGER PRIMARY KEY,
+    nome VARCHAR(40),
+    preco DECIMAL(10,2),
+    descricao TEXT,
+    data_criacao TIMESTAMP,
+    estoque_loja_id INTEGER,
+    categoria_id INTEGER,
+    data_atualizacao TIMESTAMP,
+    FOREIGN KEY (estoque_loja_id) REFERENCES ESTOQUE_LOJAS(id_estoque),
+    FOREIGN KEY (categoria_id) REFERENCES CATEGORIA(categoria_id)
+);
 
--- Inserindo registros na tabela estudantes
-INSERT INTO estudantes (nome, cpf) VALUES ('Lucas Ferreira', '12345678901');
-INSERT INTO estudantes (nome, cpf) VALUES ('Paula Santos', '23456789012');
-INSERT INTO estudantes (nome, cpf) VALUES ('Pedro Oliveira', '34567890123');
-INSERT INTO estudantes (nome, cpf) VALUES ('Carla Nunes', '45678901234');
-INSERT INTO estudantes (nome, cpf) VALUES ('Ana Paula', '56789012345');
-INSERT INTO estudantes (nome, cpf) VALUES ('Carlos Eduardo', '58585854141');
-INSERT INTO estudantes (nome, cpf) VALUES ('Lucas Antonio', '98484916414');
-INSERT INTO estudantes (nome, cpf) VALUES ('Ana Carolina', '94184196611');
--- Inserindo registros na tabela aulas
-INSERT INTO aulas (tipo_danca, tipo_aula, cod_professor) VALUES ('Salsa', 'Iniciante', 1);
-INSERT INTO aulas (tipo_danca, tipo_aula, cod_professor) VALUES ('Tango', 'Intermediário', 2);
-INSERT INTO aulas (tipo_danca, tipo_aula, cod_professor) VALUES ('Hip-Hop', 'Avançado', 3);
-INSERT INTO aulas (tipo_danca, tipo_aula, cod_professor) VALUES ('Balé', 'Iniciante', 4);
-INSERT INTO aulas (tipo_danca, tipo_aula, cod_professor) VALUES ('Zumba', 'Intermediário', 5);
+CREATE TABLE ESTOQUE_LOJAS (
+    id_estoque INTEGER,
+    quantidade DECIMAL(10,2),
+    data_atualizacao TIMESTAMP,
+    num_loja INTEGER,
+    nome VARCHAR (50),
+    endereco TEXT,
+    telefone VARCHAR(20),
+    fornecedor_id INTEGER,
+    PRIMARY KEY (id_estoque, num_loja),
+    FOREIGN KEY (fornecedor_id) REFERENCES FORNECEDOR(fornecedor_id)
+);
 
--- Inserindo registros na tabela frequentar
-INSERT INTO frequentar (id_estudante, id_aula) VALUES (1, 1);
-INSERT INTO frequentar (id_estudante, id_aula) VALUES (2, 2);
-INSERT INTO frequentar (id_estudante, id_aula) VALUES (3, 3);
-INSERT INTO frequentar (id_estudante, id_aula) VALUES (4, 4);
-INSERT INTO frequentar (id_estudante, id_aula) VALUES (5, 5);
-INSERT INTO frequentar (id_estudante, id_aula) VALUES (6, 5);
-INSERT INTO frequentar (id_estudante, id_aula) VALUES (7, 3);
-INSERT INTO frequentar (id_estudante, id_aula) VALUES (8, 2);
+CREATE TABLE CLIENTES (
+    id_cliente INTEGER PRIMARY KEY,
+    nome VARCHAR(40),
+    telefone VARCHAR(20),
+    data_cadastro TIMESTAMP,
+    email VARCHAR(40),
+    dtnascimento DATE,
+    complemento VARCHAR(40),
+    cep VARCHAR(10),
+    logradouro VARCHAR(40),
+    numero INTEGER,
+    bairro VARCHAR(40),
+    cidade VARCHAR(40),
+    crediario_id INTEGER,
+    FOREIGN KEY (crediario_id) REFERENCES CREDIARIOS(crediario_id)
+);
 
+CREATE TABLE FUNCIONARIOS (
+    funcionario_id INTEGER PRIMARY KEY,
+    nome VARCHAR(40),
+    telefone VARCHAR(20),
+    cargo VARCHAR (50),
+    estoque_loja_id INTEGER,
+    num_loja INTEGER,
+    FOREIGN KEY (estoque_loja_id, num_loja) REFERENCES ESTOQUE_LOJAS(id_estoque, num_loja)
+);
 
+CREATE TABLE CREDIARIOS (
+    crediario_id INTEGER PRIMARY KEY,
+    limite_credito DECIMAL(10,2),
+    saldo_devedor DECIMAL(10,2),
+    data_abertura TIMESTAMP,
+    funcionario_id INTEGER,
+    estoque_loja_id INTEGER,
+    num_loja INTEGER,
+    FOREIGN KEY (funcionario_id) REFERENCES FUNCIONARIOS(funcionario_id),
+    FOREIGN KEY (estoque_loja_id, num_loja) REFERENCES ESTOQUE_LOJAS(id_estoque, num_loja)
+);
 
--- Consulta 1: Selecionar todos os professores
-SELECT * FROM professores;
+CREATE TABLE COBRANCA (
+    cobranca_id INTEGER,
+    data_cobranca TIMESTAMP,
+    status_cobranca VARCHAR(20),
+    observacoes TEXT,
+    crediario_id INTEGER,
+    funcionario_id INTEGER,
+    PRIMARY KEY (cobranca_id, crediario_id),
+    FOREIGN KEY (crediario_id) REFERENCES CREDIARIOS(crediario_id),
+    FOREIGN KEY (funcionario_id) REFERENCES FUNCIONARIOS(funcionario_id)
+);
 
--- Consulta 2: Selecionar todos os estudantes
-SELECT * FROM estudantes;
+CREATE TABLE PARCELAS (
+    data_vencimento DATE,
+    valor_parcela DECIMAL(10,2),
+    parcela_id INTEGER,
+    numero_parcela INTEGER,
+    crediario_id INTEGER,
+    venda_id INTEGER,
+    PRIMARY KEY (parcela_id, crediario_id),
+    FOREIGN KEY (crediario_id) REFERENCES CREDIARIOS(crediario_id),
+    FOREIGN KEY (venda_id) REFERENCES VENDAS(id_venda)
+);
 
+CREATE TABLE VENDAS (
+    id_venda INTEGER PRIMARY KEY,
+    data_venda TIMESTAMP,
+    total DECIMAL(10,2),
+    tipo_venda VARCHAR(40),
+    cliente_id INTEGER,
+    FOREIGN KEY (cliente_id) REFERENCES CLIENTES(id_cliente)
+);
 
+CREATE TABLE ITEMVENDA (
+    id_item_venda INTEGER PRIMARY KEY,
+    quantidade DECIMAL(10,2),
+    preco_unitario DECIMAL(10,2),
+    venda_id INTEGER,
+    produto_id INTEGER,
+    FOREIGN KEY (venda_id) REFERENCES VENDAS(id_venda),
+    FOREIGN KEY (produto_id) REFERENCES PRODUTO(produto_id)
+);
 
--- Consulta envolvendo tabela estudantes e frequentar
-SELECT estudantes.nome, aulas.tipo_danca, aulas.tipo_aula
-FROM estudantes
-JOIN frequentar ON estudantes.id_estudante = frequentar.id_estudante
-JOIN aulas ON frequentar.id_aula = aulas.id_aula;
+CREATE TABLE FORNECEDOR (
+    fornecedor_id INTEGER PRIMARY KEY,
+    nome VARCHAR(40),
+    email VARCHAR(40),
+    telefone VARCHAR(20),
+    endereco TEXT,
+    contato VARCHAR(40)
+);
 
+CREATE TABLE PEDIDOREPOSICAO (
+    valor DECIMAL(10,2),
+    pedido_id INTEGER PRIMARY KEY,
+    data_pedido TIMESTAMP,
+    status VARCHAR(20),
+    fornecedor_id INTEGER,
+    FOREIGN KEY (fornecedor_id) REFERENCES FORNECEDOR(fornecedor_id)
+);
 
+CREATE TABLE CATEGORIA (
+    categoria_id INTEGER PRIMARY KEY,
+    nome VARCHAR (50)
+);
 
--- Consulta envolvendo tabela professores, aulas e frequentar
-SELECT professores.nome, aulas.tipo_danca, aulas.tipo_aula, COUNT(frequentar.id_estudante) AS num_alunos
-FROM professores
-JOIN aulas ON professores.cod_professor = aulas.cod_professor
-LEFT JOIN frequentar ON aulas.id_aula = frequentar.id_aula
-GROUP BY professores.nome, aulas.tipo_danca, aulas.tipo_aula;
-
-
--- Consulta envolvendo tabelas estudantes, aulas, frequentar e professores
-SELECT estudantes.nome AS aluno, aulas.tipo_danca, aulas.tipo_aula, professores.nome AS professor
-FROM estudantes
-JOIN frequentar ON estudantes.id_estudante = frequentar.id_estudante
-JOIN aulas ON frequentar.id_aula = aulas.id_aula
-JOIN professores ON aulas.cod_professor = professores.cod_professor;
-
-
-
-
-
-
-
--- Consulta envolvendo tabelas estudantes, aulas, frequentar e professores
-SELECT estudantes.nome AS aluno, aulas.tipo_danca, aulas.tipo_aula, professores.nome AS professor
-FROM estudantes
-JOIN frequentar ON estudantes.id_estudante = frequentar.id_estudante
-JOIN aulas ON frequentar.id_aula = aulas.id_aula
-JOIN professores ON aulas.cod_professor = professores.cod_professor;
-
-
-
--- Alterando o salário mensal do professor com cod_professor = 1
-UPDATE professores
-SET salario_mensal = 9800.00
-WHERE cod_professor = 1;
-
-
--- Excluindo o aluno com id_estudante = 1
-DELETE FROM estudantes
-WHERE id_estudante = 1;
+CREATE TABLE ACESSO (
+    cliente_id INTEGER,
+    estoque_loja_id INTEGER,
+    num_loja INTEGER,
+    FOREIGN KEY (cliente_id) REFERENCES CLIENTES(id_cliente),
+    FOREIGN KEY (estoque_loja_id, num_loja) REFERENCES ESTOQUE_LOJAS(id_estoque, num_loja)
+);

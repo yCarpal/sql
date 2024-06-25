@@ -123,3 +123,78 @@ INSERT INTO Parcela (crediario_id, venda_id, numero_parcela, valor_parcela, data
     (5, 5, 3, 700.00, '2024-09-01');
 
 
+
+
+Consulta 1: Qual item foi mais vendido
+
+SELECT 
+    p.nome AS produto, 
+    SUM(iv.quantidade) AS total_vendido
+FROM 
+    ItemVenda iv
+JOIN 
+    Produto p ON iv.produto_id = p.produto_id
+GROUP BY 
+    p.nome
+ORDER BY 
+    total_vendido DESC
+LIMIT 1;
+
+Consulta 2: Qual funcionário fez mais crediários
+
+SELECT 
+    f.nome AS funcionario, 
+    COUNT(c.crediario_id) AS total_crediarios
+FROM 
+    Crediario c
+JOIN 
+    Funcionario f ON c.funcionario_id = f.funcionario_id
+GROUP BY 
+    f.nome
+ORDER BY 
+    total_crediarios DESC
+LIMIT 1;
+
+Consulta 3: Qual foi a maior venda na loja
+
+SELECT 
+    l.nome AS loja, 
+    v.venda_id, 
+    v.total AS valor_venda
+FROM 
+    Venda v
+JOIN 
+    Loja l ON v.loja_id = l.loja_id
+ORDER BY 
+    v.total DESC
+LIMIT 1;
+
+Consulta 4: Clientes com Maior Saldo Devedor
+
+SELECT 
+    c.nome AS cliente, 
+    cr.saldo_devedor
+FROM 
+    Crediario cr
+JOIN 
+    Cliente c ON cr.cliente_id = c.cliente_id
+ORDER BY 
+    cr.saldo_devedor DESC
+LIMIT 1;
+
+Consulta 5: Produtos com Menor Estoque Disponível
+
+SELECT 
+    p.nome AS produto, 
+    SUM(e.quantidade) AS estoque_total
+FROM 
+    Estoque e
+JOIN 
+    Produto p ON e.produto_id = p.produto_id
+GROUP BY 
+    p.nome
+ORDER BY 
+    estoque_total ASC
+LIMIT 1;
+
+

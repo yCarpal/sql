@@ -1,4 +1,3 @@
--- Definição dos Domínios
 CREATE DOMAIN dom_varchar_40 AS VARCHAR(40);
 CREATE DOMAIN dom_varchar_50 AS VARCHAR(50);
 CREATE DOMAIN dom_varchar_100 AS VARCHAR(100);

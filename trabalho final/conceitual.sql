@@ -6,6 +6,7 @@ CREATE DOMAIN dom_text AS TEXT;
 CREATE DOMAIN dom_decimal AS DECIMAL(10, 2);
 CREATE DOMAIN dom_timestamp AS TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 CREATE DOMAIN dom_date AS DATE;
+--trocar dominios
 
 -- Tabela: Categoria
 CREATE TABLE Categoria (
